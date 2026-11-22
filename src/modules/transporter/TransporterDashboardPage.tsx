@@ -105,20 +105,6 @@ export function TransporterDashboardPage() {
             <MapPin className="w-4 h-4 text-blue-600" />
             <span>Service Areas</span>
           </Link>
-          <Link
-            to="/transporter/earnings"
-            className="inline-flex items-center gap-1.5 px-3 py-2 text-xs sm:text-sm font-medium text-slate-700 bg-white border border-slate-200 rounded-lg hover:bg-slate-50 transition-colors whitespace-nowrap shrink-0"
-          >
-            <IndianRupee className="w-4 h-4 text-blue-600" />
-            <span>Earnings</span>
-          </Link>
-          <Link
-            to="/transporter/update-status"
-            className="inline-flex items-center gap-2 px-4 py-2 text-xs sm:text-sm font-medium text-white bg-blue-600 rounded-lg hover:bg-blue-700 transition-colors whitespace-nowrap shrink-0"
-          >
-            <ClipboardCheck className="w-4 h-4" />
-            <span>Pickup & Delivery</span>
-          </Link>
         </div>
       </div>
 

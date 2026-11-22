@@ -326,7 +326,7 @@ export function TransporterServiceAreasPage() {
         </form>
 
         {/* CSV / Excel Bulk Import Card */}
-        <div className="bg-white border border-slate-200 rounded-xl p-5 shadow-sm space-y-4">
+        {/* <div className="bg-white border border-slate-200 rounded-xl p-5 shadow-sm space-y-4">
           <div className="flex flex-wrap items-center justify-between gap-2 pb-3 border-b border-slate-100">
             <div>
               <h2 className="text-sm font-semibold text-slate-900 flex items-center gap-2">
@@ -410,7 +410,7 @@ export function TransporterServiceAreasPage() {
               </div>
             </div>
           )}
-        </div>
+        </div> */}
       </div>
 
       {/* Configured Service Areas Table */}

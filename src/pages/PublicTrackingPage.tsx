@@ -87,10 +87,10 @@ export function PublicTrackingPage() {
     <div className="min-h-screen bg-slate-50 flex flex-col">
       <header className="bg-white border-b border-slate-200 px-4 sm:px-8 h-16 flex items-center justify-between">
         <Link to="/track" className="flex items-center gap-2.5">
-          <BrandMark className="w-8 h-8" />
-          <span className="font-display font-bold text-lg tracking-tight text-slate-900">
+          <BrandMark />
+          {/* <span className="font-display font-bold text-lg tracking-tight text-slate-900">
             ZIPIT B2B Tracking
-          </span>
+          </span> */}
         </Link>
         <Link
           to="/login"

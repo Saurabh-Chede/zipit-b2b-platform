@@ -1,23 +1,12 @@
 import React from 'react';
 
-export function BrandMark({ className = 'w-7 h-7' }: { className?: string }) {
+export function BrandMark({ className = 'h-8 w-auto' }: { className?: string }) {
   return (
-    <svg
-      viewBox="0 0 32 32"
-      fill="none"
-      xmlns="http://www.w3.org/2000/svg"
-      className={className}
-      aria-hidden="true"
-    >
-      <rect width="32" height="32" rx="7" fill="#2563EB" />
-      <path
-        d="M8 10.5H20.5L14 16H24L11.5 22.5"
-        stroke="white"
-        strokeWidth="2.5"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      />
-      <path d="M21 19.5L24.5 16L21 12.5" stroke="#93C5FD" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" />
-    </svg>
+    <img
+      src="https://zipit.co.in/__l5e/assets-v1/fcd52a27-9bc8-4c27-84b3-8484ebfce3f6/zipit-horizontal.png"
+      alt="Zipit"
+      draggable={false}
+      className={`object-contain ${className}`}
+    />
   );
 }

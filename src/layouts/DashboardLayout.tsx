@@ -74,7 +74,7 @@ const ROLE_NAV: Record<UserRole, NavItem[]> = {
   [UserRole.TRANSPORTER]: [
     { to: '/transporter', label: 'Dashboard', icon: LayoutDashboard, end: true },
     { to: '/transporter/bookings', label: 'Assigned Bookings', icon: Package },
-    { to: '/transporter/update-status', label: 'Pickup & Delivery', icon: ClipboardCheck },
+    // { to: '/transporter/update-status', label: 'Pickup & Delivery', icon: ClipboardCheck },
     { to: '/transporter/scanner', label: 'Carton Scanner', icon: ScanLine },
     { to: '/transporter/service-areas', label: 'Service Areas', icon: MapPin },
     { to: '/transporter/earnings', label: 'Earnings', icon: IndianRupee },

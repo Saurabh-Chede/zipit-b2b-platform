@@ -17,6 +17,7 @@ import {
   RotateCcw,
   Wallet,
   X,
+  FileSpreadsheet,
 } from 'lucide-react';
 import { apiClient, extractErrorMessage } from '../../services/api.ts';
 import { useAuth } from '../../context/AuthContext.tsx';
@@ -38,8 +39,9 @@ import {
   type TransportRoute,
   type Transporter,
 } from '../../types/index.ts';
+import { BulkBookingPage } from './BulkBookingPage.tsx';
 
-type WorkbenchTab = 'create' | 'bookings' | 'tracking';
+type WorkbenchTab = 'create' | 'bulk-booking' | 'tracking';
 
 interface PartyForm {
   name: string;
@@ -712,7 +714,7 @@ export function CreateBookingPage() {
             {(
               [
                 { id: 'create', label: 'Create Booking', icon: Truck },
-                { id: 'bookings', label: 'My Bookings', icon: ClipboardList },
+                { id: 'bulk-booking', label: 'Bulk Booking', icon: FileSpreadsheet },
                 { id: 'tracking', label: 'Tracking', icon: SearchCheck },
               ] as const
             ).map(({ id, label, icon: Icon }) => {
@@ -737,8 +739,8 @@ export function CreateBookingPage() {
         </div>
       </header>
 
-      {tab === 'bookings' ? (
-        <MyShipmentsPage />
+      {tab === 'bulk-booking' ? (
+        <BulkBookingPage />
       ) : tab === 'tracking' ? (
         <TrackingView />
       ) : sellerProfile && sellerProfile.approvalStatus !== SellerApprovalStatus.APPROVED ? (

@@ -460,7 +460,7 @@ export function AssignedBookingsPage() {
       </div>
 
       {/* Status Filter Tabs */}
-      <div className="flex flex-wrap items-center gap-2">
+      {/* <div className="flex flex-wrap items-center gap-2">
         {(
           [
             { id: 'ALL', label: `All (${tabCounts.ALL})` },
@@ -488,6 +488,38 @@ export function AssignedBookingsPage() {
             </button>
           );
         })}
+      </div> */}
+
+      {/* Status Filter Tabs */}
+      <div className="border-b border-slate-200 overflow-x-auto">
+        <div className="flex items-center min-w-max">
+          {(
+            [
+              { id: 'ALL', label: `All (${tabCounts.ALL})` },
+              { id: 'NEW', label: `New (${tabCounts.NEW})` },
+              { id: 'IN_TRANSIT', label: `In Transit (${tabCounts.IN_TRANSIT})` },
+              { id: 'ARRIVED', label: `Arrived (${tabCounts.ARRIVED})` },
+              { id: 'NDR_RTO', label: `NDR / RTO (${tabCounts.NDR_RTO})` },
+              { id: 'DELIVERED', label: `Delivered (${tabCounts.DELIVERED})` },
+              { id: 'CLOSED', label: `Cancelled / Rejected (${tabCounts.CLOSED})` },
+            ] as const
+          ).map((tab) => {
+            const active = activeTab === tab.id;
+            return (
+              <button
+                key={tab.id}
+                type="button"
+                onClick={() => setActiveTab(tab.id)}
+                className={`relative -mb-px px-4 py-2.5 text-xs sm:text-sm font-semibold whitespace-nowrap shrink-0 border-b-2 transition-colors ${active
+                    ? 'text-blue-600 border-blue-600 bg-blue-50/50'
+                    : 'text-slate-500 border-transparent hover:text-slate-800 hover:bg-slate-50'
+                  }`}
+              >
+                {tab.label}
+              </button>
+            );
+          })}
+        </div>
       </div>
 
       {/* Assigned Bookings Table */}
@@ -532,9 +564,8 @@ export function AssignedBookingsPage() {
                     <tr
                       key={b._id}
                       onClick={() => setSelectedId(b._id)}
-                      className={`cursor-pointer transition-colors ${
-                        isSelected ? 'bg-blue-50/60' : 'hover:bg-slate-50/80'
-                      }`}
+                      className={`cursor-pointer transition-colors ${isSelected ? 'bg-blue-50/60' : 'hover:bg-slate-50/80'
+                        }`}
                     >
                       <td className="py-3 pl-4 pr-2">
                         <input
@@ -652,8 +683,6 @@ export function AssignedBookingsPage() {
         </div>
       )}
 
-      {/* Bottom 3-Card Selected Booking Workbench */}
-
       {/* Reject Booking Modal */}
       <Modal
         open={Boolean(rejectTarget)}
@@ -764,11 +793,10 @@ export function AssignedBookingsPage() {
             <button
               type="submit"
               disabled={submittingException}
-              className={`px-4 py-2 text-sm font-semibold text-white rounded-lg disabled:opacity-50 ${
-                exceptionTarget?.status === BookingStatus.NDR
+              className={`px-4 py-2 text-sm font-semibold text-white rounded-lg disabled:opacity-50 ${exceptionTarget?.status === BookingStatus.NDR
                   ? 'bg-orange-600 hover:bg-orange-700'
                   : 'bg-purple-600 hover:bg-purple-700'
-              }`}
+                }`}
             >
               {submittingException
                 ? 'Saving...'

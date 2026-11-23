@@ -70,10 +70,14 @@
 //   return ctx;
 // }
 
-
 import React, { createContext, useCallback, useContext, useEffect, useState } from 'react';
 import { apiClient } from '../services/api.ts';
-import { setStoredAuthToken } from '../utils/apiConfig.ts';
+import {
+  getStoredAuthToken,
+  isExplicitlyLoggedOut,
+  setExplicitLogoutFlag,
+  setStoredAuthToken,
+} from '../utils/apiConfig.ts';
 import type { AuthUser, SellerProfile, Transporter } from '../types/index.ts';
 
 interface AuthContextValue {
@@ -93,11 +97,18 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [loading, setLoading] = useState(true);
 
   const refreshUser = useCallback(async () => {
+    if (!getStoredAuthToken() && isExplicitlyLoggedOut()) {
+      setUser(null);
+      setProfile(null);
+      setLoading(false);
+      return;
+    }
+
     try {
       const res = await apiClient.get<{
         success: boolean;
         data: { user: AuthUser; profile: SellerProfile | Transporter | null };
-      }>('/auth/me');
+      }>('/auth/me', { timeout: 45000 });
       setUser(res.data.data.user);
       setProfile(res.data.data.profile);
     } catch {
@@ -117,6 +128,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       success: boolean;
       data: { token?: string; user: AuthUser; profile: SellerProfile | Transporter | null };
     }>('/auth/login', { email, password });
+    setExplicitLogoutFlag(false);
     if (res.data.data.token) {
       setStoredAuthToken(res.data.data.token);
     }
@@ -126,9 +138,12 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   }, []);
 
   const logout = useCallback(async () => {
+    setExplicitLogoutFlag(true);
+    setStoredAuthToken(null);
     try {
       await apiClient.post('/auth/logout');
     } finally {
+      setExplicitLogoutFlag(true);
       setStoredAuthToken(null);
       setUser(null);
       setProfile(null);

@@ -250,13 +250,28 @@ export const loginController = asyncHandler(async (req: Request, res: Response) 
 });
 
 export const logoutController = asyncHandler(async (req: Request, res: Response) => {
-  const tokenCookieOpts = getCookieOptions(req, true);
-  const csrfCookieOpts = getCookieOptions(req, false);
-  delete tokenCookieOpts.maxAge;
-  delete csrfCookieOpts.maxAge;
+  const clearAllVariants = (name: string, httpOnly: boolean) => {
+    const baseOpts = getCookieOptions(req, httpOnly) as CookieOptions & { partitioned?: boolean };
+    delete baseOpts.maxAge;
+    res.clearCookie(name, baseOpts);
 
-  res.clearCookie('zipit_token', tokenCookieOpts);
-  res.clearCookie('zipit_csrf', csrfCookieOpts);
+    // Also expire legacy unpartitioned cookies (previously set without Partitioned)
+    if (baseOpts.partitioned) {
+      const legacyOpts: CookieOptions = { ...baseOpts };
+      delete (legacyOpts as CookieOptions & { partitioned?: boolean }).partitioned;
+      res.clearCookie(name, legacyOpts);
+    }
+
+    // Also expire host-only variant if COOKIE_DOMAIN was configured
+    if (baseOpts.domain) {
+      const hostOnlyOpts: CookieOptions = { ...baseOpts };
+      delete hostOnlyOpts.domain;
+      res.clearCookie(name, hostOnlyOpts);
+    }
+  };
+
+  clearAllVariants('zipit_token', true);
+  clearAllVariants('zipit_csrf', false);
 
   logger.info({
     requestId: req.requestId,

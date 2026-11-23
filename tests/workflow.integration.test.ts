@@ -4565,11 +4565,16 @@ describe('ZIPIT B2B End-to-End API Integration Tests', () => {
     const meBefore = await sellerAgent.get('/api/v1/auth/me');
     expect(meBefore.status).toBe(200);
 
-    const logoutRes = await sellerAgent.post('/api/v1/auth/logout').set('X-Requested-With', 'XMLHttpRequest');
+    const logoutRes = await sellerAgent
+      .post('/api/v1/auth/logout')
+      .set('X-Forwarded-Proto', 'https')
+      .set('X-Requested-With', 'XMLHttpRequest');
     expect(logoutRes.status).toBe(200);
     const clearedHeaders = (logoutRes.headers['set-cookie'] || []) as string[];
-    expect(clearedHeaders.some((c) => c.startsWith('zipit_token=;'))).toBe(true);
-    expect(clearedHeaders.some((c) => c.startsWith('zipit_csrf=;'))).toBe(true);
+    expect(clearedHeaders.some((c) => c.startsWith('zipit_token=;') && c.includes('Partitioned'))).toBe(true);
+    expect(clearedHeaders.some((c) => c.startsWith('zipit_token=;') && !c.includes('Partitioned'))).toBe(true);
+    expect(clearedHeaders.some((c) => c.startsWith('zipit_csrf=;') && c.includes('Partitioned'))).toBe(true);
+    expect(clearedHeaders.some((c) => c.startsWith('zipit_csrf=;') && !c.includes('Partitioned'))).toBe(true);
 
     // 2. Login returns Bearer token, WebSocket auth supports cookie & query token, and Bearer overrides stale cookies
     const freshSeller = request.agent(app);
@@ -5257,7 +5262,6 @@ describe('ZIPIT B2B End-to-End API Integration Tests', () => {
     expect(directLedgerRow.settlementState).toBe('DIRECT_SELF_COLLECTED');
   });
 });
-
 
 
 

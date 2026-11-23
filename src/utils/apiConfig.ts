@@ -51,7 +51,6 @@
 
 // export const API_BASE_URL = resolveApiBaseUrl();
 
-
 export function resolveApiBaseUrl(rawApiUrl?: string): string {
   const value = (rawApiUrl ?? import.meta.env?.VITE_API_URL ?? '').trim();
   if (!value) {
@@ -72,6 +71,29 @@ export function buildApiUrl(path: string, rawApiUrl?: string): string {
 }
 
 const AUTH_TOKEN_STORAGE_KEY = 'zipit_auth_token';
+const EXPLICIT_LOGOUT_STORAGE_KEY = 'zipit_logged_out';
+
+export function isExplicitlyLoggedOut(): boolean {
+  try {
+    if (typeof window === 'undefined' || !window.localStorage) return false;
+    return window.localStorage.getItem(EXPLICIT_LOGOUT_STORAGE_KEY) === '1';
+  } catch {
+    return false;
+  }
+}
+
+export function setExplicitLogoutFlag(loggedOut: boolean): void {
+  try {
+    if (typeof window === 'undefined' || !window.localStorage) return;
+    if (loggedOut) {
+      window.localStorage.setItem(EXPLICIT_LOGOUT_STORAGE_KEY, '1');
+    } else {
+      window.localStorage.removeItem(EXPLICIT_LOGOUT_STORAGE_KEY);
+    }
+  } catch {
+    // Ignore storage quota or privacy-mode restrictions
+  }
+}
 
 export function getStoredAuthToken(): string | null {
   try {

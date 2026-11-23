@@ -40,10 +40,35 @@ function isAllowedWsOrigin(req: IncomingMessage): boolean {
   return rawOrigin !== '*' && env.corsOrigins.includes(rawOrigin);
 }
 
+// export async function authenticateWsRequest(req: IncomingMessage): Promise<string | null> {
+//   try {
+//     const cookies = parseCookies(req.headers.cookie);
+//     const token = cookies.zipit_token;
+//     if (!token) return null;
+
+//     const decoded = jwt.verify(token, env.jwtSecret) as JwtPayload;
+//     const user = await User.findById(decoded.userId).select('_id isActive tokenVersion').lean();
+//     if (!user || !user.isActive) return null;
+//     if ((decoded.tokenVersion ?? 0) !== (user.tokenVersion ?? 0)) {
+//       return null;
+//     }
+//     return user._id.toString();
+//   } catch {
+//     return null;
+//   }
+// }
+
+
 export async function authenticateWsRequest(req: IncomingMessage): Promise<string | null> {
   try {
     const cookies = parseCookies(req.headers.cookie);
-    const token = cookies.zipit_token;
+    let token: string | undefined = cookies.zipit_token || undefined;
+
+    if (!token && req.url) {
+      const parsed = new URL(req.url, 'http://localhost');
+      token = parsed.searchParams.get('token') || undefined;
+    }
+
     if (!token) return null;
 
     const decoded = jwt.verify(token, env.jwtSecret) as JwtPayload;

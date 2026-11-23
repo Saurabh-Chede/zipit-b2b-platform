@@ -72,7 +72,8 @@
 
 
 import React, { createContext, useCallback, useContext, useEffect, useState } from 'react';
-import { apiClient, clearAuthToken, setAuthToken } from '../services/api.ts';
+import { apiClient } from '../services/api.ts';
+import { setStoredAuthToken } from '../utils/apiConfig.ts';
 import type { AuthUser, SellerProfile, Transporter } from '../types/index.ts';
 
 interface AuthContextValue {
@@ -117,7 +118,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       data: { token?: string; user: AuthUser; profile: SellerProfile | Transporter | null };
     }>('/auth/login', { email, password });
     if (res.data.data.token) {
-      setAuthToken(res.data.data.token);
+      setStoredAuthToken(res.data.data.token);
     }
     setUser(res.data.data.user);
     setProfile(res.data.data.profile);
@@ -128,7 +129,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     try {
       await apiClient.post('/auth/logout');
     } finally {
-      clearAuthToken();
+      setStoredAuthToken(null);
       setUser(null);
       setProfile(null);
     }

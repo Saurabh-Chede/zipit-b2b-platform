@@ -143,10 +143,10 @@
 //   );
 // }
 
-
 import React, { useState } from 'react';
 import { Eye, EyeOff, KeyRound, ShieldCheck } from 'lucide-react';
-import { apiClient, extractErrorMessage, setAuthToken } from '../../services/api.ts';
+import { apiClient, extractErrorMessage } from '../../services/api.ts';
+import { setStoredAuthToken } from '../../utils/apiConfig.ts';
 import { useToast } from '../../context/ToastContext.tsx';
 
 export function ChangePasswordCard() {
@@ -181,11 +181,9 @@ export function ChangePasswordCard() {
         message: string;
         data?: { token?: string; csrfToken?: string };
       }>('/auth/change-password', { currentPassword, newPassword });
-
       if (res.data.data?.token) {
-        setAuthToken(res.data.data.token);
+        setStoredAuthToken(res.data.data.token);
       }
-
       const msg =
         res.data.message || 'Password updated. All other active sessions have been signed out.';
       setSuccessMsg(msg);

@@ -256,8 +256,8 @@
 // }
 
 import React, { createContext, useCallback, useContext, useEffect, useRef, useState } from 'react';
-import { apiClient, ApiClientError, getAuthToken } from '../services/api.ts';
-import { resolveWebSocketUrl } from '../utils/apiConfig.ts';
+import { apiClient, ApiClientError } from '../services/api.ts';
+import { getStoredAuthToken, resolveWebSocketUrl } from '../utils/apiConfig.ts';
 import { useAuth } from './AuthContext.tsx';
 import { useToast } from './ToastContext.tsx';
 import type { AppNotification, NotificationListResponse } from '../types/index.ts';
@@ -329,11 +329,7 @@ export function NotificationProvider({ children }: { children: React.ReactNode }
 
     const connectWebSocket = () => {
       if (unmountedRef.current || !user) return;
-      const baseWsUrl = resolveWebSocketUrl();
-      const authToken = getAuthToken();
-      const wsUrl = authToken
-        ? `${baseWsUrl}${baseWsUrl.includes('?') ? '&' : '?'}token=${encodeURIComponent(authToken)}`
-        : baseWsUrl;
+      const wsUrl = resolveWebSocketUrl({ token: getStoredAuthToken() || undefined });
       let opened = false;
 
       try {
@@ -515,4 +511,3 @@ export function useNotifications() {
   if (!ctx) throw new Error('useNotifications must be used within NotificationProvider');
   return ctx;
 }
-

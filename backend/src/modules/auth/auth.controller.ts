@@ -198,6 +198,8 @@ export function getCookieOptions(req: Request, httpOnly: boolean): CookieOptions
     if (!isHttps) {
       sameSite = 'lax';
     } else if (domain) {
+      // Subdomains sharing a parent COOKIE_DOMAIN (e.g. app.zipit.in <-> api.zipit.in) are same-site;
+      // Lax works reliably across Safari ITP/Chrome and provides stronger CSRF defense than None.
       sameSite = 'lax';
     } else {
       sameSite = 'none';
@@ -206,17 +208,20 @@ export function getCookieOptions(req: Request, httpOnly: boolean): CookieOptions
     sameSite = env.cookieSameSite;
   }
 
-  const secure = sameSite === 'none' ? true : isHttps;
-
-  return {
+  const options: CookieOptions & { partitioned?: boolean } = {
     httpOnly,
-    secure,
+    secure: sameSite === 'none' ? true : isHttps,
     sameSite,
     path: '/',
     maxAge: 7 * 24 * 60 * 60 * 1000,
-    ...(sameSite === 'none' && secure ? { partitioned: true } : {}),
     ...(domain ? { domain } : {}),
   };
+
+  if (sameSite === 'none' && options.secure) {
+    options.partitioned = true;
+  }
+
+  return options;
 }
 
 export const loginController = asyncHandler(async (req: Request, res: Response) => {
@@ -327,3 +332,5 @@ export const changePasswordController = asyncHandler(async (req: Request, res: R
     },
   });
 });
+
+

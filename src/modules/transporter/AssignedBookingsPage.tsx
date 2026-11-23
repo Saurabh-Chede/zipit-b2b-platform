@@ -491,7 +491,7 @@ export function AssignedBookingsPage() {
       </div> */}
 
       {/* Status Filter Tabs */}
-      <div className="border-b border-slate-200 overflow-x-auto">
+      <div className="border-b border-slate-200 overflow-x-auto [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden">
         <div className="flex items-center min-w-max">
           {(
             [
@@ -511,8 +511,8 @@ export function AssignedBookingsPage() {
                 type="button"
                 onClick={() => setActiveTab(tab.id)}
                 className={`relative -mb-px px-4 py-2.5 text-xs sm:text-sm font-semibold whitespace-nowrap shrink-0 border-b-2 transition-colors ${active
-                    ? 'text-blue-600 border-blue-600 bg-blue-50/50'
-                    : 'text-slate-500 border-transparent hover:text-slate-800 hover:bg-slate-50'
+                  ? 'text-blue-600 border-blue-600 bg-blue-50/50'
+                  : 'text-slate-500 border-transparent hover:text-slate-800 hover:bg-slate-50'
                   }`}
               >
                 {tab.label}
@@ -794,8 +794,8 @@ export function AssignedBookingsPage() {
               type="submit"
               disabled={submittingException}
               className={`px-4 py-2 text-sm font-semibold text-white rounded-lg disabled:opacity-50 ${exceptionTarget?.status === BookingStatus.NDR
-                  ? 'bg-orange-600 hover:bg-orange-700'
-                  : 'bg-purple-600 hover:bg-purple-700'
+                ? 'bg-orange-600 hover:bg-orange-700'
+                : 'bg-purple-600 hover:bg-purple-700'
                 }`}
             >
               {submittingException
